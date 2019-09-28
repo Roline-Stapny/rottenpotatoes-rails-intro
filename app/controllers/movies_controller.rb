@@ -15,9 +15,31 @@ class MoviesController < ApplicationController
   #end
 
   def index
+      
+      
+      
        @movies = Movie.order(params[:sort_by])
        @sort_column = params[:sort_by]
+       @all_ratings=Movie.uniq.pluck(:rating)
+       
+       @selected_ratings=params[:rating]
+       
+       
+       
+       
+       
+       #@selected_ratings = (params["ratings"].present? ? params["ratings"] : @all_ratings)
+       #@movies = @movies.where(":rating IN (?)", params["ratings"]) if params["ratings"].present? and params["ratings"].any?
+   
+       
+       
   end
+  
+  
+  
+  
+  
+  
   
   def new
     # default: render 'new' template

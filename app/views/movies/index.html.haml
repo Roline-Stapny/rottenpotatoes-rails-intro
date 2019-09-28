@@ -6,11 +6,11 @@
   Include:
   - @all_ratings.each do |rating|
     = rating
-    = check_box_tag "ratings[#{rating}]"
+    = check_box_tag "ratings[#{rating}]", 1, @selected_ratings.include?("#{rating}"), :id => 'ratings_'#{rating} 
   = submit_tag 'Refresh', :id => 'ratings_submit'
 
 %h2
-=  @selected_ratings
+
 
 
 %table#movies.table.table-striped.col-md-12

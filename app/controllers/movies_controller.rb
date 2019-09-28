@@ -18,11 +18,22 @@ class MoviesController < ApplicationController
       
       
       
-       @movies = Movie.order(params[:sort_by])
-       @sort_column = params[:sort_by]
+       
        @all_ratings=Movie.uniq.pluck(:rating)
        
-       @selected_ratings=params[:rating]
+       @selected_ratings=params[:ratings].try(:keys) || []
+       
+       @filered_movies=Movie.with_ratings(@selected_ratings)
+       
+       if @filered_movies[0]
+           @movies=@filered_movies
+       
+       
+       else
+         @selected_ratings=@all_ratings
+         @movies = Movie.order(params[:sort_by])
+         @sort_column = params[:sort_by]
+       end
        
        
        

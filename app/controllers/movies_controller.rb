@@ -17,27 +17,44 @@ class MoviesController < ApplicationController
   def index
       
       
-      
        
        @all_ratings=Movie.uniq.pluck(:rating)
+
        
-       @selected_ratings=params[:ratings].try(:keys) || []
+       @selected_ratings=params[:ratings].try(:keys)
        
-       @filered_movies=Movie.with_ratings(@selected_ratings)
-       
-       if @filered_movies[0]
-           @movies=@filered_movies
-       
-       
+       if @selected_ratings
+         session[:selected_ratings_session]=@selected_ratings
+         
+         #@filered_movies=Movie.with_ratings(@selected_ratings)
+         
        else
-         @selected_ratings=@all_ratings
-         @movies = Movie.order(params[:sort_by])
-         @sort_column = params[:sort_by]
+         
+         @selected_ratings=session[:selected_ratings_session]
+         
        end
-       
-       
-       
-       
+         #@selected_ratings=@all_ratings
+         
+         #@sort_column = params[:sort_by]
+         
+        if params[:sort_by]
+          @sort_column=params[:sort_by]
+          session[:sort_column]= @sort_column
+          
+        else
+          @sort_column=session[:sort_column]
+          
+        end
+        
+        @movies=@filered_movies
+          
+        @filered_movies=Movie.with_ratings(@selected_ratings).order(@sort_column)
+        
+        #@movies = Movie
+        
+       @movies=@filered_movies
+          
+  
        
        #@selected_ratings = (params["ratings"].present? ? params["ratings"] : @all_ratings)
        #@movies = @movies.where(":rating IN (?)", params["ratings"]) if params["ratings"].present? and params["ratings"].any?
@@ -57,6 +74,7 @@ class MoviesController < ApplicationController
   end
 
   def create
+    
     @movie = Movie.create!(movie_params)
     flash[:notice] = "#{@movie.title} was successfully created."
     redirect_to movies_path

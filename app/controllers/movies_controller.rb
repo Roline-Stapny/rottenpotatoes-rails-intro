@@ -15,11 +15,8 @@ class MoviesController < ApplicationController
   #end
 
   def index
-      
-      
        
        @all_ratings=Movie.uniq.pluck(:rating)
-
        
        @selected_ratings=params[:ratings].try(:keys)
        
@@ -29,9 +26,12 @@ class MoviesController < ApplicationController
          #@filered_movies=Movie.with_ratings(@selected_ratings)
          
        else
-         
-         @selected_ratings=session[:selected_ratings_session]
-         
+           if session[:selected_ratings_session]
+              @selected_ratings=session[:selected_ratings_session]
+              
+            else
+              @selected_ratings=@all_ratings
+           end
        end
          #@selected_ratings=@all_ratings
          
@@ -42,8 +42,12 @@ class MoviesController < ApplicationController
           session[:sort_column]= @sort_column
           
         else
-          @sort_column=session[:sort_column]
-          
+            if session[:sort_column]
+              @sort_column=session[:sort_column]
+              
+            else
+              @sort_column=params[:sort_by]
+            end
         end
         
         @movies=@filered_movies
@@ -59,8 +63,6 @@ class MoviesController < ApplicationController
        #@selected_ratings = (params["ratings"].present? ? params["ratings"] : @all_ratings)
        #@movies = @movies.where(":rating IN (?)", params["ratings"]) if params["ratings"].present? and params["ratings"].any?
    
-       
-       
   end
   
   

@@ -1,1 +1,3 @@
 http://hidden-forest-64282.herokuapp.com/
+
+https://github.com/Roline-Stapny/rottenpotatoes-rails-intro
